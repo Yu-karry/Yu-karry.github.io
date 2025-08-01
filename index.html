@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>晚安·诗与梦都给你</title>
+<link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body,html{height:100%;font-family:'ZCOOL XiaoWei',serif;
+background:linear-gradient(135deg,#1e1e4f 0%,#0f0f2b 100%);overflow:hidden;color:#fff}
+@keyframes float{
+  0%{transform:translateY(0) translateX(0) scale(1)}
+  50%{transform:translateY(-25px) translateX(12px) scale(1.2)}
+  100%{transform:translateY(0) translateX(0) scale(1)}
+}
+.bg span{position:absolute;display:block;width:3px;height:3px;
+background:#fff;border-radius:50%;opacity:.6;animation:float 7s linear infinite}
+.card{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+width:90%;max-width:440px;background:rgba(255,255,255,.08);
+border:1px solid rgba(255,255,255,.18);border-radius:20px;
+padding:45px 30px;text-align:center;backdrop-filter:blur(12px);
+box-shadow:0 10px 36px rgba(0,0,0,.35);transition:all .45s}
+.card:active{transform:translate(-50%,-50%) scale(.97)}
+h1{font-family:'Ma Shan Zheng',cursive;font-size:2.3em;margin-bottom:.5em}
+#poem{font-size:1.2em;line-height:1.6;min-height:4.2em}
+#author{font-size:.9em;color:#ddd;margin-top:.4em}
+#refreshBtn{margin-top:18px;background:none;border:none;color:#ffd7f0;
+font-size:1.4em;cursor:pointer;transition:transform .3s}
+#refreshBtn:hover{transform:rotate(180deg)}
+@media(max-width:600px){h1{font-size:1.9em}#poem{font-size:1.05em}}
+</style>
+</head>
+<body>
+<div class="bg" id="bg"></div>
+<div class="card" onclick="nextPoem()">
+  <h1>晚安·诗与梦都给你</h1>
+  <p id="poem">正在为你摘星星…</p>
+  <p id="author"></p>
+  <button id="refreshBtn" title="换一句"><i class="fas fa-sync-alt"></i></button>
+</div>
+
+<script>
+/* —— 50 句冷门且优美的诗句（25 现代 + 25 古典）—— */
+const poems = [
+/* —— 现代诗文 25 —— */
+{text:"我忽然想起，山谷里那一大片黄昏，竟从未被人领走。",from:"—— 张枣《黄昏》"},
+{text:"我把天空和大地打扫干干净净，归还一个陌不相识的人。",from:"—— 海子《黎明》"},
+{text:"风吹着空旷的夜也吹着我，风吹着未来也吹着过去。",from:"—— 西川《风吹》"},
+{text:"灯在深巷里漂，像一盏小小的白莲。",from:"—— 洛夫《金龙禅寺》"},
+{text:"雪落无声，一只鹤在纸上留下长喙的痕迹。",from:"—— 欧阳江河《纸上的秋天》"},
+{text:"我听见时间在屋脊上踱步，瓦松的针芒闪着幽蓝。",from:"—— 陈东东《即景》"},
+{text:"一枚松果落地，整座山都微微倾斜。",from:"—— 王家新《秋天》"},
+{text:"夜里，漫长的铁轨像两根银白的弦，弹着风。",from:"—— 翟永明《夜的车站》"},
+{text:"月光像一块冰，在瓦楞上慢慢融化。",from:"—— 孙文波《月光曲》"},
+{text:"雾起时，整座城在一只巨大的螺壳里沉睡。",from:"—— 杨炼《诺日朗》"},
+{text:"星群在屋顶撒盐，夜用黑碗盛着寂静。",from:"—— 廖伟棠《夜饮》"},
+{text:"远山用雪线割开天空的灰布，露出一点点蓝。",from:"—— 蓝蓝《早春》"},
+{text:"一只旧钟在墙角独语，把夜敲得更黑。",from:"—— 韩东《夜行人》"},
+{text:"风把海的消息贴满礁石，又悄悄撕掉。",from:"—— 钟鸣《石室》"},
+{text:"火车经过山谷，惊起一片雪白的回声。",from:"—— 柏桦《在秋天》"},
+{text:"雨在瓦上弹琴，弹到黎明才停。",from:"—— 郑愁予《雨夜》"},
+{text:"桥影在水面折断，像一段无法投递的旧信。",from:"—— 多多《阿姆斯特丹的河流》"},
+{text:"整个下午都是风，把银杏叶翻到金黄的那一页。",from:"—— 陆忆敏《秋天》"},
+{text:"雪落无声，屋顶的白像一封未曾寄出的信。",from:"—— 朱朱《夜雪》"},
+{text:"夜里，河把灯火揉碎成满身的磷光。",from:"—— 欧阳江河《傍晚穿过广场》"},
+{text:"一只白鹭掠过水面，带走了我全部的倒影。",from:"—— 庞培《低地》"},
+{text:"月光把石头照成雪，雪又照成石头。",from:"—— 余怒《月夜》"},
+{text:"风把落叶吹成火焰，又吹成灰烬。",from:"—— 雷平阳《秋风辞》"},
+{text:"夜航的船只用灯光在海上缝补黑暗。",from:"—— 杨键《夜航》"},
+{text:"钟声缓慢，像一只蜗牛爬过寺院的屋顶。",from:"—— 何小竹《慢》"},
+
+/* —— 古典生僻诗句 25 —— */
+{text:"一枕清风听绿筠，人间无地著红尘。",from:"—— 林景熙《溪亭》"},
+{text:"雨声凉入砚，花气润侵帘。",from:"—— 文徵明《夏日闲居》"},
+{text:"水影动深树，山光窥短墙。",from:"—— 黎简《小园》"},
+{text:"孤磬月中度，万松风里寒。",from:"—— 厉鹗《灵隐寺》"},
+{text:"石泉远逾响，山鸟时一喧。",from:"—— 柳宗元《中夜起望西园值月上》"},
+{text:"竹窗斜月影，苔砌乱蛩声。",from:"—— 司空曙《题暕上人院》"},
+{text:"云尽月如练，水凉风似秋。",from:"—— 许浑《月夜过灵彻上人房》"},
+{text:"雁过孤峰远，萤藏古木疏。",from:"—— 齐己《书古寺僧房》"},
+{text:"鹤盘远势投孤屿，蝉曳残声过别枝。",from:"—— 方干《旅次扬州》"},
+{text:"暗牖悬蛛网，空梁落燕泥。",from:"—— 薛道衡《昔昔盐》"},
+{text:"古磬声敲雪，寒灯影照霜。",from:"—— 无可《秋夜宿西林寺》"},
+{text:"松风吹解带，山月照弹琴。",from:"—— 王维《酬张少府》"},
+{text:"空潭泻春，古镜照神。",from:"—— 司空图《二十四诗品·洗炼》"},
+{text:"流泉得月光，化为一溪雪。",from:"—— 袁中道《夜泉》"},
+{text:"疏星淡秋明，孤灯寒夜静。",from:"—— 张耒《秋夜》"},
+{text:"片云生断壁，孤磬答空林。",from:"—— 程可则《送杨鄂州》"},
+{text:"雨余芳草净沙尘，水绿滩平一带春。",from:"—— 羊士谔《泛舟入后溪》"},
+{text:"古戍飘黄叶，空城澹夕晖。",from:"—— 刘长卿《步登夏口古城》"},
+{text:"鸟栖红叶树，月照青苔墙。",from:"—— 储嗣宗《宿山馆》"},
+{text:"寒潭映白月，秋雨上青苔。",from:"—— 刘长卿《游休禅师双峰寺》"},
+{text:"青苔满阶砌，白鸟故迟留。",from:"—— 刘禹锡《金陵五题》"},
+{text:"野旷天低树，江清月近人。",from:"—— 孟浩然《宿建德江》"},
+{text:"古木无人径，深山何处钟。",from:"—— 王维《过香积寺》"},
+{text:"远钟度双阙，残月低三川。",from:"—— 李益《水宿闻雁》"},
+{text:"片云天共远，永夜月同孤。",from:"—— 杜甫《江汉》"}
+];
+
+/* 工具函数 */
+function nextPoem(){
+  const {text,from}=poems[Math.floor(Math.random()*poems.length)];
+  document.getElementById('poem').innerText=text;
+  document.getElementById('author').innerText=from;
+}
+nextPoem();
+
+/* 星空背景 */
+for(let i=0;i<60;i++){
+  const s=document.createElement('span');
+  s.style.left=Math.random()*100+'vw';
+  s.style.top=Math.random()*100+'vh';
+  s.style.animationDelay=Math.random()*7+'s';
+  s.style.width=s.style.height=Math.random()*3+1+'px';
+  document.getElementById('bg').appendChild(s);
+}
+</script>
+</body>
+</html>
